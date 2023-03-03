@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SPSiteTools.ViewModels"
+             x:Class="SPSiteTools.MainPage">
+    
+    <ContentPage.BindingContext>
+        <local:MainViewModel/>
+    </ContentPage.BindingContext>
+    
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+            <Label
+                Text="{Binding Path=HelloMessage, Mode=OneWay}"
+                SemanticProperties.Description="Displays a welcome message for the user"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+            <Button
+                Text="Load User Info"
+                SemanticProperties.Hint="Loads user information from Microsoft Graph"
+                Command="{Binding Path=LoadUserInformationCommand}"
+                HorizontalOptions="Center" />
+            <Label
+                Text="{Binding Path=UserName, Mode=OneWay}"
+                SemanticProperties.Description="Displays the user's display name from Microsoft Graph."
+                SemanticProperties.HeadingLevel="Level2"
+                FontSize="18"
+                HorizontalOptions="Center" />
+            <Label
+                Text="{Binding Path=UserPrincipalName, Mode=OneWay}"
+                SemanticProperties.Description="Displays the user principal name from Microsoft Graph"
+                SemanticProperties.HeadingLevel="Level2"
+                FontSize="18"
+                HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
