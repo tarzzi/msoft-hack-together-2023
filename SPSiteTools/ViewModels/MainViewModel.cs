@@ -1,11 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SPSiteTools.Models;
 
 namespace SPSiteTools.ViewModels
 {
@@ -31,14 +26,30 @@ namespace SPSiteTools.ViewModels
         private async Task LoadUserInformation()
         {
             var service = new GraphService();
-            Microsoft.Graph.Models.User user = await service.GetMyDetailsAsync();
+            Microsoft.Graph.Beta.Models.User user = null;
+            try
+            {
+                user = await service.GetMyDetailsAsync();
+                UserName = user.DisplayName;
+                UserGivenName = user.GivenName;
+                UserSurname = user.Surname;
+                UserPrincipalName = user.UserPrincipalName;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading user details: {ex}");
+            }
 
-            UserName = user.DisplayName;
-            UserGivenName = user.GivenName;
-            UserSurname = user.Surname;
-            UserPrincipalName = user.UserPrincipalName;
+        }
+        [RelayCommand]
+        private async Task CreateSpSite()
+        {
+            var service = new GraphService();
+            Microsoft.Graph.Beta.Models.SitePage newPage = await service.CreateNewSitePage("test","test","test","test");
+
         }
 
+        
 
     }
 

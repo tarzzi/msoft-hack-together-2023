@@ -24,6 +24,10 @@
                 SemanticProperties.Hint="Loads user information from Microsoft Graph"
                 Command="{Binding Path=LoadUserInformationCommand}"
                 HorizontalOptions="Center" />
+            <Button
+                Text="Create new site"
+                Command="{Binding Path=CreateSpSiteCommand}"
+                />
             <Label
                 Text="{Binding Path=UserName, Mode=OneWay}"
                 SemanticProperties.Description="Displays the user's display name from Microsoft Graph."
