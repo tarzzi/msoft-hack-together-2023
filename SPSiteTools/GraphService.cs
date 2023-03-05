@@ -6,7 +6,7 @@ namespace SPSiteTools.Models
 {
     internal class GraphService
     {
-        private readonly string[] _scopes = new[] { "User.Read" };
+        private readonly string[] _scopes = new[] { "User.Read","Sites.Read.All", "Sites.ReadWrite.All" };
         private const string TenantId = "";
         private const string ClientId = "";
         private GraphServiceClient _client;
@@ -80,7 +80,7 @@ namespace SPSiteTools.Models
             }
         }
 
-        public async Task<SitePageCollectionResponse> ListAllSitePages(string siteID)
+        public async Task<SitePageCollectionResponse> GetSitePages(string siteID)
         {
             try
             {

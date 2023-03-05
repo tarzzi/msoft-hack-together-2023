@@ -24,10 +24,41 @@
                 SemanticProperties.Hint="Loads user information from Microsoft Graph"
                 Command="{Binding Path=LoadUserInformationCommand}"
                 HorizontalOptions="Center" />
-            <Button
-                Text="Create new site"
-                Command="{Binding Path=CreateSpSiteCommand}"
+            <Entry x:Name="entry"
+                Placeholder="Enter Site Collection ID"
+                Text="{Binding Path=SiteID, Mode=TwoWay}"
+                IsVisible="{Binding Path=LoggedIn}"/>
+            <Button 
+                Text="List all Sitepages"
+                Command="{Binding Path=GetSitesCommand}"
+                IsVisible="{Binding Path=LoggedIn}"
                 />
+            <ListView
+                ItemsSource="{Binding Path=SitePageCollectionResponse}">
+                
+            </ListView>
+
+            <HorizontalStackLayout
+                Padding="20"
+                Spacing="25">
+                <Entry x:Name="entryTitle"
+                Placeholder="New sitepage Title"
+                Text="{Binding Path=NewSiteTitle, Mode=TwoWay}"
+                IsVisible="{Binding Path=LoggedIn}"/>
+                <Entry x:Name="entryName"
+                Placeholder="New sitepage Name"
+                Text="{Binding Path=NewSiteName, Mode=TwoWay}"
+                IsVisible="{Binding Path=LoggedIn}"/>
+                <Entry x:Name="entryDescription"
+                Placeholder="New sitepage Description "
+                Text="{Binding Path=NewSiteDescription, Mode=TwoWay}"
+                IsVisible="{Binding Path=LoggedIn}"/>
+                <Button
+                    Text="Create a new site page"
+                    Command="{Binding Path=CreateSpSiteCommand}"
+                    IsVisible="{Binding Path=LoggedIn}"
+                    />
+            </HorizontalStackLayout>
             <Label
                 Text="{Binding Path=UserName, Mode=OneWay}"
                 SemanticProperties.Description="Displays the user's display name from Microsoft Graph."
@@ -41,6 +72,7 @@
                 FontSize="18"
                 HorizontalOptions="Center" />
         </VerticalStackLayout>
+        
     </ScrollView>
 
 </ContentPage>
