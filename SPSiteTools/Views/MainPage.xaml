@@ -28,6 +28,11 @@
                 Placeholder="Enter Site Collection ID"
                 Text="{Binding Path=SiteID, Mode=TwoWay}"
                 IsVisible="{Binding Path=LoggedIn}"/>
+            <Line x:Name="line"
+                  X1="0"
+                  Y1="0"
+                  X2="100"
+                  Y2="100" />
             <Button 
                 Text="List all Sitepages"
                 Command="{Binding Path=GetSitesCommand}"
@@ -35,9 +40,13 @@
                 />
             <ListView
                 ItemsSource="{Binding Path=SitePageCollectionResponse}">
-                
             </ListView>
-
+            <Line x:Name="line2"
+                  X1="0"
+                  Y1="0"
+                  X2="100"
+                  Y2="100" />
+            <Label FontSize="Medium" Text="Create a new site"/>
             <HorizontalStackLayout
                 Padding="20"
                 Spacing="25">
@@ -54,23 +63,15 @@
                 Text="{Binding Path=NewSiteDescription, Mode=TwoWay}"
                 IsVisible="{Binding Path=LoggedIn}"/>
                 <Button
-                    Text="Create a new site page"
+                    Text="Create"
                     Command="{Binding Path=CreateSpSiteCommand}"
                     IsVisible="{Binding Path=LoggedIn}"
                     />
+                <Label Text="Sites retrieved"/>
+                <ListView ItemsSource="{Binding RetrievedSites}"/>
+
+
             </HorizontalStackLayout>
-            <Label
-                Text="{Binding Path=UserName, Mode=OneWay}"
-                SemanticProperties.Description="Displays the user's display name from Microsoft Graph."
-                SemanticProperties.HeadingLevel="Level2"
-                FontSize="18"
-                HorizontalOptions="Center" />
-            <Label
-                Text="{Binding Path=UserPrincipalName, Mode=OneWay}"
-                SemanticProperties.Description="Displays the user principal name from Microsoft Graph"
-                SemanticProperties.HeadingLevel="Level2"
-                FontSize="18"
-                HorizontalOptions="Center" />
         </VerticalStackLayout>
         
     </ScrollView>
