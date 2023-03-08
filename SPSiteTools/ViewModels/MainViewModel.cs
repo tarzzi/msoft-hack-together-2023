@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Graph.Beta.Models;
-using SPSiteTools.Models;
+using SPSiteTools.Services;
+using System.Diagnostics;
 
 namespace SPSiteTools.ViewModels
 {
@@ -24,12 +25,17 @@ namespace SPSiteTools.ViewModels
 
         [ObservableProperty]
         private Boolean loggedIn = false;
+        [ObservableProperty]
+        private Boolean displayLogin = true;
 
         [ObservableProperty]
         private string siteID = "";
 
         [ObservableProperty]
-        private SitePageCollectionResponse sitePageCollectionResponse;
+        private string searchTerm = "";
+
+        [ObservableProperty]
+        private IEnumerable<Site> retrievedSites;
 
         [ObservableProperty]
         private User user = null;
@@ -43,19 +49,48 @@ namespace SPSiteTools.ViewModels
         [ObservableProperty]
         private string newSiteName = "";
 
+        [ObservableProperty]
+        private SiteCollectionResponse graphResponse;
+
+        // Create service instance from GraphService.cs and use that for each of the methods below
+        
+        private GraphService _graphService;
+
+        public MainViewModel()
+        {
+            _graphService = GraphService.Instance;
+        }
+        public void LogOut()
+        {
+            try
+            {
+                _graphService.Dispose();
+                DisplayLogin = true;
+                LoggedIn = false;
+                // Other logout logic here
+            }
+            catch (Exception ex)
+            {
+
+                Debug.WriteLine("failed here");
+                Debug.WriteLine(ex);
+                throw;
+            }
+        }
+
         [RelayCommand]
         private async Task LoadUserInformation()
         {
-            var service = new GraphService();
             try
             {
-                User = await service.GetMyDetailsAsync();
+                User = await _graphService.GetMyDetailsAsync();
                 UserName = User.DisplayName;
                 UserGivenName = User.GivenName;
                 UserSurname = User.Surname;
                 UserPrincipalName = User.UserPrincipalName;
                 HelloMessage = $"Hello {User.GivenName}!";
                 LoggedIn = true;
+                DisplayLogin = false;
             }
             catch (Exception ex)
             {
@@ -66,17 +101,15 @@ namespace SPSiteTools.ViewModels
         [RelayCommand]
         private async Task CreateSpSite()
         {
-            var service = new GraphService();
-            _ = await service.CreateNewSitePage(SiteID, NewSiteDescription, NewSiteName, NewSiteTitle);
+            _ = await _graphService.CreateNewSitePage(SiteID, NewSiteDescription, NewSiteName, NewSiteTitle);
 
         }
 
         [RelayCommand]
         private async Task GetSites()
         {
-            var service = new GraphService();
-            SitePageCollectionResponse = await service.GetSitePages(SiteID);
-
+            GraphResponse = await _graphService.GetSitePages(SearchTerm);
+            RetrievedSites = GraphResponse.Value;
         }
 
     }
