@@ -7,7 +7,7 @@
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Home"
+        Title="SharePoint Page Toolkit"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 

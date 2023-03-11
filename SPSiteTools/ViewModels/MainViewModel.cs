@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Graph.Beta.Models;
 using Microsoft.Graph.Beta.Models.ODataErrors;
 using SPSiteTools.Services;
+using System.Diagnostics;
 
 namespace SPSiteTools.ViewModels
 {
@@ -108,8 +109,8 @@ namespace SPSiteTools.ViewModels
     {
       try
       {
-        _ = await _graphService.CreateNewSitePage(SiteID, NewSiteDescription, NewSiteName, NewSiteTitle);
-
+        var response = await _graphService.CreateNewSitePage(SiteID, NewSiteDescription, NewSiteName, NewSiteTitle);
+        ShowResponse(response);
       }
       catch (ODataError odataError)
       {
@@ -121,9 +122,6 @@ namespace SPSiteTools.ViewModels
       }
     }
 
-    public delegate void MyEventAction(string message);
-    public event MyEventAction MyEvent;
-
 
     [RelayCommand]
     private async Task GetSites()
@@ -131,6 +129,14 @@ namespace SPSiteTools.ViewModels
       try
       {
         GraphResponse = await _graphService.GetSitePages(SearchTerm);
+
+        // Replace with only the site ID
+        foreach (var site in GraphResponse.Value)
+        {
+          var siteId = site.Id.Split(',')[1];
+          site.Id = siteId;
+        }
+
         RetrievedSites = GraphResponse.Value;
       }
       catch (ODataError odataError)
@@ -143,14 +149,24 @@ namespace SPSiteTools.ViewModels
       }
     }
 
+    public async void ShowResponse(SitePage response)
+    {
+      string shownMessage = response.Id + " : " + response.Title + " : " + response.WebUrl;
+
+      if (App.Current?.MainPage is not null)
+      {
+        await App.Current.MainPage.DisplayAlert("Created", shownMessage, "Ok");
+      }
+    }
+
     public async void ShowOdataExceptionAlert(ODataError odataError)
     {
       string errorCode = odataError.Error.Code.ToString();
       string errorMessage = odataError.Error.Message.ToString();
-      var toastMesssage = errorCode + " : " + errorMessage;
+      var shownMessage = errorCode + " : " + errorMessage;
       if (App.Current?.MainPage is not null)
       {
-        await App.Current.MainPage.DisplayAlert("OData Error", toastMesssage, "Ok");
+        await App.Current.MainPage.DisplayAlert("OData Error", shownMessage, "Ok");
       }
     }
 
