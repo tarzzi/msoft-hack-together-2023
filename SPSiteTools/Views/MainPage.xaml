@@ -2,164 +2,192 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:SPSiteTools.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="SPSiteTools.MainPage">
-    
-    <ContentPage.BindingContext>
-        <local:MainViewModel/>
-    </ContentPage.BindingContext>
-    
-    <ScrollView>
+
+  <ContentPage.BindingContext>
+    <local:MainViewModel/>
+  </ContentPage.BindingContext>
+
+  <ScrollView>
+    <VerticalStackLayout
+      Spacing="25"
+      Padding="30,0"
+      VerticalOptions="Center">
+      <VerticalStackLayout.Resources>
+        <Style x:Key="headerStyle"
+               TargetType="Label">
+          <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+      </VerticalStackLayout.Resources>
+      <VerticalStackLayout Padding="30 0">
+      <Label
+        Text="{Binding Path=HelloMessage, Mode=OneWay}"
+        SemanticProperties.Description="Displays a welcome message for the user"
+        SemanticProperties.HeadingLevel="Level1"
+        FontSize="32"
+        HorizontalOptions="Center" Margin="5 0 30 0" />
+      <Button
+        Text="Login" WidthRequest="100"
+        SemanticProperties.Hint="Loads user information from Microsoft Graph"
+        Command="{Binding Path=LoadUserInformationCommand}"
+        HorizontalOptions="Center" IsVisible="{Binding Path=DisplayLogin}" />
+      <Button
+        Text="Logout" WidthRequest="100"
+        SemanticProperties.Hint="Loads user information from Microsoft Graph"
+        Command="{Binding Path=LoadUserInformationCommand}"
+        HorizontalOptions="Center" IsVisible="{Binding Path=LoggedIn}" />
+      </VerticalStackLayout>
+      <Line Stroke="#CBCBCB"
+      X2="2000" />
+      <toolkit:Expander>
+        <toolkit:Expander.Header>
+          <Label Text="🔍 Search sites by name 🔎" HorizontalOptions="Center" FontSize="Medium" Margin="15 0 30 0"></Label>
+        </toolkit:Expander.Header>
         <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
-            <Label
-                Text="{Binding Path=HelloMessage, Mode=OneWay}"
-                SemanticProperties.Description="Displays a welcome message for the user"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="End" />
-            <Button
-                Text="Login" WidthRequest="100"
-                SemanticProperties.Hint="Loads user information from Microsoft Graph"
-                Command="{Binding Path=LoadUserInformationCommand}"
-                HorizontalOptions="End" IsVisible="{Binding Path=DisplayLogin}" />
-            <Button
-                Text="Logout" WidthRequest="100"
-                SemanticProperties.Hint="Loads user information from Microsoft Graph"
-                Command="{Binding Path=LoadUserInformationCommand}"
-                HorizontalOptions="End" IsVisible="{Binding Path=LoggedIn}" />
-            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Padding="0" Margin="0">
-                <Label HorizontalOptions="Start" FontSize="Medium" Text="Search sites by term" Margin="5"></Label>
-                <Entry HorizontalOptions="Fill" x:Name="entry" Margin="5" WidthRequest="250"
-                Placeholder="Search term"
-                Text="{Binding Path=SearchTerm}"
-                IsVisible="{Binding Path=LoggedIn}" />
-            </StackLayout>
-            <Button Margin="0" HorizontalOptions="Center" WidthRequest="200"
-                Text="Search Sites"
-                Command="{Binding Path=GetSitesCommand}"
-                IsVisible="{Binding Path=LoggedIn}"
-                />
-            <Grid Padding="5" Margin="0">
-                <Grid.RowDefinitions>
+      Spacing="25"
+      Padding="30,0"
+      VerticalOptions="StartAndExpand">
+          <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Padding="0" Margin="0">
+            <Entry HorizontalOptions="Fill" x:Name="entry" Margin="5" WidthRequest="250"
+          Placeholder="Search term"
+          Text="{Binding Path=SearchTerm}"
+           />
+          </StackLayout>
+          <Button Margin="0" HorizontalOptions="Center" WidthRequest="200"
+        Text="Search Sites"
+        Command="{Binding Path=GetSitesCommand}"
+        />
+          <Grid Padding="5" Margin="0" HorizontalOptions="Center">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="auto" />
+              <ColumnDefinition Width="auto" />
+              <ColumnDefinition Width="auto" />
+              <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Border 
+          Grid.Column="0"
+          Stroke="#000000"
+          StrokeThickness="1"
+          Padding="20,8"
+          HorizontalOptions="Center">
+              <Label FontSize="Small" Text="Display name" />
+            </Border>
+            <Border 
+          Grid.Column="1"
+          Stroke="#000000"
+          BackgroundColor="#EEEEEE"
+          StrokeThickness="1"
+          Padding="20,8"
+          HorizontalOptions="Center">
+              <Label FontSize="Small" Grid.Column="2" Text="Created" />
+            </Border>
+            <Border 
+          Grid.Column="2"
+          Stroke="#000000"
+          StrokeThickness="1"
+          Padding="20,8"
+          HorizontalOptions="Center">
+              <Label FontSize="Small" Grid.Column="2" Text="URL" />
+            </Border>
+            <Border 
+          Grid.Column="4"
+          Stroke="#000000"
+          StrokeThickness="1"
+          Padding="20,8"
+          HorizontalOptions="Center">
+              <Label FontSize="Small" Grid.Column="4" Text="Description" />
+            </Border>
+          </Grid>
+          <CollectionView
+        ItemsSource="{Binding RetrievedSites}"
+        ItemsLayout="VerticalList"
+        HorizontalOptions="Center"
+        Margin="0">
+            <CollectionView.ItemTemplate>
+              <DataTemplate>
+                <Grid Padding="5">
+                  <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <Border 
-                    Grid.Column="0"
-                    Stroke="#000000"
-                    StrokeThickness="1"
-                    Padding="20,8"
-                    HorizontalOptions="Center">
-                    <Label FontSize="Small" Text="Display name" />
-                </Border>
-                <Border 
-                    Grid.Column="1"
-                    Stroke="#000000"
-                    BackgroundColor="#EEEEEE"
-                    StrokeThickness="1"
-                    Padding="20,8"
-                    HorizontalOptions="Center">
-                    <Label FontSize="Small" Grid.Column="2" Text="Created" />
-                </Border>
-                <Border 
-                    Grid.Column="2"
-                    Stroke="#000000"
-                    StrokeThickness="1"
-                    Padding="20,8"
-                    HorizontalOptions="Center">
-                    <Label FontSize="Small" Grid.Column="2" Text="URL" />
-                </Border>
-                <Border 
-                    Grid.Column="4"
-                    Stroke="#000000"
-                    StrokeThickness="1"
-                    Padding="20,8"
-                    HorizontalOptions="Center">
-                    <Label FontSize="Small" Grid.Column="4" Text="Description" />
-                </Border>
-            </Grid>
-            <CollectionView
-                ItemsSource="{Binding RetrievedSites}"
-                ItemsLayout="VerticalList"
-                Margin="0">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <Border 
-                                Grid.Column="0"
-                                Stroke="#000000"
-                                StrokeThickness="1"
-                                Padding="20,8"
-                                HorizontalOptions="Center">
-                                <Label FontSize="Small" Text="{Binding DisplayName}" />
-                            </Border>
+                  </Grid.ColumnDefinitions>
+                  <Border 
+                Grid.Column="0"
+                Stroke="#000000"
+                StrokeThickness="1"
+                Padding="20,8"
+                HorizontalOptions="Center">
+                    <Label FontSize="Small" Text="{Binding DisplayName}" />
+                  </Border>
 
-                            <Border 
-                                Grid.Column="1"
-                                Stroke="#000000"
-                                BackgroundColor="#EEEEEE"
-                                StrokeThickness="1"
-                                Padding="20,8"
-                                HorizontalOptions="Center">
-                                <Label FontSize="Small" Grid.Column="2" Text="{Binding CreatedDateTime}" />
-                            </Border>
-                            <Border 
-                                Grid.Column="2"
-                                Stroke="#000000"
-                                StrokeThickness="1"
-                                Padding="20,8"
-                                HorizontalOptions="Center">
-                                <Label FontSize="Small" Grid.Column="2" Text="{Binding WebUrl}" />
-                            </Border>
-                            <Border 
-                                Grid.Column="4"
-                                Stroke="#000000"
-                                StrokeThickness="1"
-                                Padding="20,8"
-                                HorizontalOptions="Center">
-                            <Label FontSize="Small" Grid.Column="3" Text="{Binding Description}" />
-                            </Border>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-
-            </CollectionView>
-            <Label FontSize="Medium" Text="Create a new site"/>
-            <Entry x:Name="entryTitle"
-                Placeholder="New sitepage Title"
-                Text="{Binding Path=NewSiteTitle, Mode=TwoWay}"
-                IsVisible="{Binding Path=LoggedIn}"/>
-            <Entry x:Name="entryName"
-                Placeholder="New sitepage Name"
-                Text="{Binding Path=NewSiteName, Mode=TwoWay}"
-                IsVisible="{Binding Path=LoggedIn}"/>
-            <Entry x:Name="entryDescription"
-                Placeholder="New sitepage Description "
-                Text="{Binding Path=NewSiteDescription, Mode=TwoWay}"
-                IsVisible="{Binding Path=LoggedIn}"/>
-            <Button
-                Text="Create"
-                Command="{Binding Path=CreateSpSiteCommand}"
-                IsVisible="{Binding Path=LoggedIn}"/>
-
+                  <Border 
+                Grid.Column="1"
+                Stroke="#000000"
+                BackgroundColor="#EEEEEE"
+                StrokeThickness="1"
+                Padding="20,8"
+                HorizontalOptions="Center">
+                    <Label FontSize="Small" Grid.Column="2" Text="{Binding CreatedDateTime}" />
+                  </Border>
+                  <Border 
+                Grid.Column="2"
+                Stroke="#000000"
+                StrokeThickness="1"
+                Padding="20,8"
+                HorizontalOptions="Center">
+                    <Label FontSize="Small" Grid.Column="2" Text="{Binding WebUrl}" />
+                  </Border>
+                  <Border 
+                Grid.Column="4"
+                Stroke="#000000"
+                StrokeThickness="1"
+                Padding="20,8"
+                HorizontalOptions="Center">
+                    <Label FontSize="Small" Grid.Column="3" Text="{Binding Description}" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
         </VerticalStackLayout>
-        
-    </ScrollView>
-
+      </toolkit:Expander>
+      <Line Stroke="#CBCBCB"
+      X2="2000" />
+      <toolkit:Expander>
+        <toolkit:Expander.Header>
+          <Label FontSize="Medium" Text="🆕 Create a new site 🆕" Margin="5 0 30 0" HorizontalOptions="Center"/>
+        </toolkit:Expander.Header>
+        <VerticalStackLayout
+          WidthRequest="500"
+      Spacing="25"
+      Padding="30,0"
+      VerticalOptions="Center">
+          <Entry x:Name="entryTitle"
+        Placeholder="New sitepage Title"
+        Text="{Binding Path=NewSiteTitle, Mode=TwoWay}"
+        />
+          <Entry x:Name="entryName"
+        Placeholder="New sitepage Name"
+        Text="{Binding Path=NewSiteName, Mode=TwoWay}"
+        />
+          <Entry x:Name="entryDescription"
+        Placeholder="New sitepage Description "
+        Text="{Binding Path=NewSiteDescription, Mode=TwoWay}"
+        />
+          <Button
+        Text="Create"
+        Command="{Binding Path=CreateSpSiteCommand}"
+        />
+        </VerticalStackLayout>
+      </toolkit:Expander>
+    </VerticalStackLayout>
+  </ScrollView>
 </ContentPage>
