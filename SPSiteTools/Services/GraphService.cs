@@ -4,6 +4,12 @@ using Microsoft.Graph.Beta;
 using Microsoft.Graph.Beta.Models;
 using Microsoft.Kiota.Abstractions;
 
+/**
+* Basic operations of SharePoint sites and pages, using Graph API - Beta endpoint
+* Author: @Tarzzi
+**/
+
+
 namespace SPSiteTools.Services
 {
   internal class GraphService
@@ -22,16 +28,9 @@ namespace SPSiteTools.Services
     {
       get
       {
-        if (_instance == null)
-        {
-          _instance = new GraphService();
-        }
+        _instance ??= new GraphService();
         return _instance;
       }
-    }
-    public void Dispose()
-    {
-      _instance = null;
     }
 
     private void Initialize()
@@ -68,20 +67,21 @@ namespace SPSiteTools.Services
         PageLayout = PageLayoutType.Article,
         PromotionKind = PagePromotionType.Page,
       };
-      return await _client.Sites["{site-id}"].Pages.PostAsync(requestBody);
+      return await _client.Sites[siteID].Pages.PostAsync(requestBody);
     }
 
-    public async Task<SiteCollectionResponse> GetSitePages(string searchTerm)
+
+    public async Task<SiteCollectionResponse> SearchSites(string searchTerm)
     {
-
-      // Get a list of sites using Graph api
-      // Beta endpoint currently https://graph.microsoft.com/beta/sites/{siteId}/pages
-
       return await _client.Sites.GetAsync((requestConfiguration) =>
-          {
-            requestConfiguration.QueryParameters.Search = searchTerm;
-          });
+      {
+        requestConfiguration.QueryParameters.Search = searchTerm;
+      });
+    }
 
+    public async Task<SitePageCollectionResponse> ListPages(string siteID)
+    {
+      return await _client.Sites[siteID].Pages.GetAsync();
     }
 
     public async Task<SitePage> UpdateSitePage(string siteID, string pageID, string title)
@@ -96,7 +96,7 @@ namespace SPSiteTools.Services
 
     public async Task DeleteSitePage(string siteID, string pageID)
     {
-      await _client.Sites[$"{siteID}"].Pages[$"{pageID}"].DeleteAsync();
+       await _client.Sites[$"{siteID}"].Pages[$"{pageID}"].DeleteAsync();
     }
   }
 }

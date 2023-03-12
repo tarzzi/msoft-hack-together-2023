@@ -33,10 +33,16 @@ namespace SPSiteTools.ViewModels
     private string siteID = "";
 
     [ObservableProperty]
+    private string pageID = "";
+
+    [ObservableProperty]
     private string searchTerm = "";
 
     [ObservableProperty]
     private IEnumerable<Site> retrievedSites;
+
+    [ObservableProperty]
+    private IEnumerable<SitePage> retrievedSitePages;
 
     [ObservableProperty]
     private User user = null;
@@ -51,7 +57,10 @@ namespace SPSiteTools.ViewModels
     private string newSiteName = "";
 
     [ObservableProperty]
-    private SiteCollectionResponse graphResponse;
+    private SiteCollectionResponse sitesResponse;
+
+    [ObservableProperty]
+    private SitePageCollectionResponse sitePagesResponse;
 
     // Create service instance from GraphService.cs and use that for each of the methods below
     private GraphService _graphService;
@@ -60,25 +69,6 @@ namespace SPSiteTools.ViewModels
     {
       _graphService = GraphService.Instance;
     }
-    public void LogOut()
-    {
-      try
-      {
-        _graphService.Dispose();
-        DisplayLogin = true;
-        LoggedIn = false;
-        // Other logout logic here
-      }
-      catch (ODataError odataError)
-      {
-        ShowOdataExceptionAlert(odataError);
-      }
-      catch (Exception ex)
-      {
-        ShowExceptionAlert(ex);
-      }
-    }
-
 
     [RelayCommand]
     private async Task LoadUserInformation()
@@ -122,22 +112,78 @@ namespace SPSiteTools.ViewModels
       }
     }
 
+    [RelayCommand]
+    private async Task UpdatePage()
+    {
+      try
+      {
+        var response = await _graphService.UpdateSitePage(SiteID, PageID, NewSiteTitle);
+        ShowResponse(response);
+      }
+      catch (ODataError odataError)
+      {
+        ShowOdataExceptionAlert(odataError);
+      }
+      catch (Exception ex)
+      {
+        ShowExceptionAlert(ex);
+      }
+    }
+
+
+    [RelayCommand]
+    private async Task DeletePage()
+    {
+      try
+      {
+        await _graphService.DeleteSitePage(SiteID, PageID);
+        ShowResponse("Success", "Site deleted");
+      }
+      catch (ODataError odataError)
+      {
+        ShowOdataExceptionAlert(odataError);
+      }
+      catch (Exception ex)
+      {
+        ShowExceptionAlert(ex);
+      }
+    }
+
 
     [RelayCommand]
     private async Task GetSites()
     {
       try
       {
-        GraphResponse = await _graphService.GetSitePages(SearchTerm);
+        SitesResponse = await _graphService.SearchSites(SearchTerm);
 
         // Replace with only the site ID
-        foreach (var site in GraphResponse.Value)
+        foreach (var site in SitesResponse.Value)
         {
           var siteId = site.Id.Split(',')[1];
           site.Id = siteId;
         }
 
-        RetrievedSites = GraphResponse.Value;
+        RetrievedSites = SitesResponse.Value;
+      }
+      catch (ODataError odataError)
+      {
+        ShowOdataExceptionAlert(odataError);
+      }
+      catch (Exception ex)
+      {
+        ShowExceptionAlert(ex);
+      }
+    }
+
+    [RelayCommand]
+    private async Task GetPages()
+    {
+      try
+      {
+        SitePagesResponse = await _graphService.ListPages(SiteID);
+
+        RetrievedSitePages = SitePagesResponse.Value;
       }
       catch (ODataError odataError)
       {
@@ -158,6 +204,16 @@ namespace SPSiteTools.ViewModels
         await App.Current.MainPage.DisplayAlert("Created", shownMessage, "Ok");
       }
     }
+
+    public async void ShowResponse(string responseTitle, string response)
+    {
+
+      if (App.Current?.MainPage is not null)
+      {
+        await App.Current.MainPage.DisplayAlert(responseTitle, response, "Ok");
+      }
+    }
+
 
     public async void ShowOdataExceptionAlert(ODataError odataError)
     {
