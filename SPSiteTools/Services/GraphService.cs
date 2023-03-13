@@ -15,12 +15,10 @@ namespace SPPageTools.Services
 {
   internal class GraphService
   {
-    private readonly string[] _scopes = new[] { "User.Read", "Sites.Read.All", "Sites.ReadWrite.All" };
-    // Get values from configuration that is stored in appSettings.json
+    private const string TenantId = "";
+    private const string ClientId = "";
+    private readonly string[] _scopes = new[] { "User.Read", "Sites.ReadWrite.All" };
 
-
-    private const string TenantId = "b8acf3fb-c93b-4f7f-8b47-39d4c91068a6";
-    private const string ClientId = "24af24f0-fe8b-4a17-a623-19f24cca3de8";
     private GraphServiceClient _client;
     private static GraphService _instance;
     public GraphService()
