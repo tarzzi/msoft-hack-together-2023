@@ -9,11 +9,6 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-		// Get appSettings.json file and add that to the configuration
-		var configuration = new ConfigurationBuilder()
-      .AddJsonStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("SPPageTools.appSettings.json"))
-      .Build();
-
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
