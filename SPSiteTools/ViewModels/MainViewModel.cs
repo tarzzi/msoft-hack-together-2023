@@ -2,10 +2,16 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Graph.Beta.Models;
 using Microsoft.Graph.Beta.Models.ODataErrors;
-using SPSiteTools.Services;
+using SPPageTools.Services;
 using System.Diagnostics;
 
-namespace SPSiteTools.ViewModels
+/**
+ * View model for the main page
+ * Part of .NET & Graph microsoft-hack-together 2023
+ * Author: @Tarzzi
+ **/
+
+namespace SPPageTools.ViewModels
 {
   public partial class MainViewModel : ObservableObject
   {
@@ -57,12 +63,15 @@ namespace SPSiteTools.ViewModels
     private string newSiteName = "";
 
     [ObservableProperty]
+    private string updatedSiteTitle = "";
+
+    [ObservableProperty]
     private SiteCollectionResponse sitesResponse;
 
     [ObservableProperty]
     private SitePageCollectionResponse sitePagesResponse;
 
-    // Create service instance from GraphService.cs and use that for each of the methods below
+    // Create service instance from GraphService.cs and use that for each of the functions below
     private GraphService _graphService;
 
     public MainViewModel()
@@ -95,12 +104,12 @@ namespace SPSiteTools.ViewModels
     }
 
     [RelayCommand]
-    private async Task CreateSpSite()
+    private async Task CreateSpSitePage()
     {
       try
       {
         var response = await _graphService.CreateNewSitePage(SiteID, NewSiteDescription, NewSiteName, NewSiteTitle);
-        ShowResponse(response);
+        SetPageResponse("Created page", response);
       }
       catch (ODataError odataError)
       {
@@ -117,8 +126,8 @@ namespace SPSiteTools.ViewModels
     {
       try
       {
-        var response = await _graphService.UpdateSitePage(SiteID, PageID, NewSiteTitle);
-        ShowResponse(response);
+        var response = await _graphService.UpdateSitePage(SiteID, PageID, UpdatedSiteTitle);
+        SetPageResponse("Updated page", response);
       }
       catch (ODataError odataError)
       {
@@ -137,7 +146,7 @@ namespace SPSiteTools.ViewModels
       try
       {
         await _graphService.DeleteSitePage(SiteID, PageID);
-        ShowResponse("Success", "Site deleted");
+        SetStringResponse("Deleted", "Page " + PageID + " has been deleted");
       }
       catch (ODataError odataError)
       {
@@ -195,19 +204,19 @@ namespace SPSiteTools.ViewModels
       }
     }
 
-    public async void ShowResponse(SitePage response)
+    public void SetPageResponse(string responseTitle, SitePage response)
     {
-      string shownMessage = response.Id + " : " + response.Title + " : " + response.WebUrl;
-
-      if (App.Current?.MainPage is not null)
-      {
-        await App.Current.MainPage.DisplayAlert("Created", shownMessage, "Ok");
-      }
+      string shownMessage = "ID: "+ response.Id + " - Title: " + response.Title + " - WebURL: " + response.WebUrl;
+      ShowResponsePopUp(responseTitle, shownMessage);
     }
 
-    public async void ShowResponse(string responseTitle, string response)
+    public void SetStringResponse(string responseTitle, string response)
     {
+      ShowResponsePopUp(responseTitle, response);
+    }
 
+    public async void ShowResponsePopUp(string responseTitle, string response)
+    {
       if (App.Current?.MainPage is not null)
       {
         await App.Current.MainPage.DisplayAlert(responseTitle, response, "Ok");

@@ -3,6 +3,7 @@ using Microsoft.Graph;
 using Microsoft.Graph.Beta;
 using Microsoft.Graph.Beta.Models;
 using Microsoft.Kiota.Abstractions;
+using System.Diagnostics;
 
 /**
 * Basic operations of SharePoint sites and pages, using Graph API - Beta endpoint
@@ -10,11 +11,14 @@ using Microsoft.Kiota.Abstractions;
 **/
 
 
-namespace SPSiteTools.Services
+namespace SPPageTools.Services
 {
   internal class GraphService
   {
     private readonly string[] _scopes = new[] { "User.Read", "Sites.Read.All", "Sites.ReadWrite.All" };
+    // Get values from configuration that is stored in appSettings.json
+
+
     private const string TenantId = "";
     private const string ClientId = "";
     private GraphServiceClient _client;
@@ -38,16 +42,24 @@ namespace SPSiteTools.Services
       // using windows
       if (OperatingSystem.IsWindows())
       {
-        var options = new InteractiveBrowserCredentialOptions
+        try
         {
-          TenantId = TenantId,
-          ClientId = ClientId,
-          AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-          RedirectUri = new Uri("https://localhost"),
-        };
+          var options = new InteractiveBrowserCredentialOptions
+          {
+            TenantId = TenantId,
+            ClientId = ClientId,
+            AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+            RedirectUri = new Uri("https://localhost"),
+          };
 
-        InteractiveBrowserCredential interactiveCredential = new(options);
-        _client = new GraphServiceClient(interactiveCredential, _scopes);
+          InteractiveBrowserCredential interactiveCredential = new(options);
+          _client = new GraphServiceClient(interactiveCredential, _scopes);
+        }
+        catch (Exception ex)
+        {
+          Debug.WriteLine(ex.Message);
+          throw;
+        }
 
       }
     }
@@ -90,7 +102,7 @@ namespace SPSiteTools.Services
       {
         Title = title,
       };
-      return await _client.Sites[$"{pageID}"].Pages[$"{siteID}"].PatchAsync(requestBody);
+      return await _client.Sites[$"{siteID}"].Pages[$"{pageID}"].PatchAsync(requestBody);
 
     }
 

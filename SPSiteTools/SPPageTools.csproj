@@ -49,7 +49,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="appSettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="appSettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Azure.Identity" Version="1.8.2" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Graph.Beta" Version="5.20.0-preview" />

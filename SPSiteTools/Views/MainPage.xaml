@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:SPSiteTools.ViewModels"
+             xmlns:local="clr-namespace:SPPageTools.ViewModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="SPSiteTools.MainPage">
+             x:Class="SPPageTools.MainPage">
 
   <ContentPage.BindingContext>
     <local:MainViewModel/>
   </ContentPage.BindingContext>
-
   <ScrollView>
     <VerticalStackLayout
       Spacing="25"
@@ -36,7 +35,7 @@
       </VerticalStackLayout>
       <Line Stroke="#CBCBCB"
       X2="2000" />
-      <!-- SEARCH -->
+      <!-- SEARCH SITES -->
       <toolkit:Expander x:Name="Search" Margin="10" HorizontalOptions="Center">
         <toolkit:Expander.Header>
           <Label Text="🔍 Search sites by name" HorizontalOptions="Center"  FontSize="Medium" Margin="0, 0, 0, 15"></Label>
@@ -70,7 +69,7 @@
           StrokeThickness="1"
           Padding="20,8"
           HorizontalOptions="Center">
-              <Label FontSize="Small" Text="Display name" />
+              <Label FontSize="Small" Text="ID - Click to select" />
             </Border>
             <Border 
           Grid.Column="1"
@@ -78,15 +77,15 @@
           StrokeThickness="1"
           Padding="20,8"
           HorizontalOptions="Center">
-              <Label VerticalOptions="Center" HorizontalOptions="Center" FontSize="Small" Text="URL" />
+              <Label FontSize="Small" Text="Display name" />
             </Border>
             <Border 
-          Grid.Column="3"
+          Grid.Column="2"
           Stroke="#000000"
           StrokeThickness="1"
           Padding="20,8"
           HorizontalOptions="Center">
-              <Label FontSize="Small" Text="ID - Click to copy" />
+              <Label VerticalOptions="Center" HorizontalOptions="Center" FontSize="Small" Text="URL" />
             </Border>
           </Grid>
           <CollectionView
@@ -106,7 +105,7 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                   </Grid.ColumnDefinitions>
-                  <Button Clicked="SetSiteID_Handler" Text="{Binding Id}" HeightRequest="20" Margin="5, 0, 0, 0" Grid.Column="0"/>
+                  <Button Clicked="SetSiteIDHandler" Text="{Binding Id}" HeightRequest="20" Margin="5, 0, 0, 0" Grid.Column="0"/>
                   <Border 
                 Grid.Column="1"
                 Stroke="#000000"
@@ -122,6 +121,108 @@
                 Padding="10"
                 HorizontalOptions="Center">
                     <Label Text="{Binding WebUrl}" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+        </VerticalStackLayout>
+      </toolkit:Expander>
+      <Line Stroke="#CBCBCB"
+      X2="2000" />
+
+      <!-- GET PAGES-->
+      <toolkit:Expander Margin="10" HorizontalOptions="Center">
+        <toolkit:Expander.Header>
+          <Label FontSize="Medium" Text="🔎 List pages" HorizontalOptions="Center" Margin="0, 0, 0, 15"/>
+        </toolkit:Expander.Header>
+        <VerticalStackLayout
+          Spacing="25"
+          Padding="30,0"
+          VerticalOptions="Center">
+          <VerticalStackLayout>
+            <HorizontalStackLayout>
+              <Label Text="Site ID: " VerticalOptions="Center"></Label>
+              <Entry x:Name="entryListPagesSiteID" WidthRequest="290" VerticalTextAlignment="Center"
+                Placeholder="1234123-123123-123123..."
+                Text="{Binding Path=SiteID, Mode=TwoWay}"
+                />
+              <Button 
+              Text="Search"
+              Margin="5, 0, 0, 0"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              Command="{Binding Path=GetPagesCommand}"
+              />
+            </HorizontalStackLayout>
+          </VerticalStackLayout>
+          <Grid Padding="5" Margin="0" HorizontalOptions="Center">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="auto" />
+              <ColumnDefinition Width="auto" />
+              <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Border 
+          Grid.Column="0"
+          Stroke="#000000"
+          StrokeThickness="1"
+          Padding="20,8"
+          HorizontalOptions="Center">
+              <Label FontSize="Small" Text="ID - Click to select" />
+            </Border>
+            <Border 
+          Grid.Column="1"
+          Stroke="#000000"
+          StrokeThickness="1"
+          Padding="20,8"
+          HorizontalOptions="Center">
+              <Label FontSize="Small" Text="Title" />
+            </Border>
+            <Border 
+          Grid.Column="2"
+          Stroke="#000000"
+          StrokeThickness="1"
+          Padding="20,8"
+          HorizontalOptions="Center">
+              <Label VerticalOptions="Center" HorizontalOptions="Center" FontSize="Small" Text="Name" />
+            </Border>
+          </Grid>
+          <CollectionView
+        ItemsSource="{Binding RetrievedSitePages}"
+        ItemsLayout="VerticalList"
+        HorizontalOptions="Center"
+        Margin="0, 0, 0, 20">
+            <CollectionView.ItemTemplate>
+              <DataTemplate>
+                <Grid Padding="5"  RowSpacing="20" >
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                  </Grid.ColumnDefinitions>
+                  <Button  Clicked="SetPageIDHandler" Text="{Binding Id}" HeightRequest="20" Margin="20, 0, 0, 0" Grid.Column="0"/>
+                  <Border 
+                Grid.Column="1"
+                Stroke="#000000"
+                StrokeThickness="1"
+                Padding="20,8"
+                HorizontalOptions="Center">
+                    <Label Grid.Column="2" Text="{Binding Title}" />
+                  </Border>
+                  <Border 
+                Grid.Column="2"
+                Stroke="#000000"
+                StrokeThickness="1"
+                Padding="10"
+                HorizontalOptions="Center">
+                    <Label Text="{Binding Name}" />
                   </Border>
                 </Grid>
               </DataTemplate>
@@ -149,7 +250,7 @@
           </Grid.ColumnDefinitions>
           <VerticalStackLayout Grid.Row="0" Grid.Column="0">
             <Label Text="Site ID: " VerticalOptions="Center"></Label>
-            <Entry x:Name="entryID" WidthRequest="300"
+            <Entry x:Name="entryCreatePageSiteID" WidthRequest="300"
             Placeholder="1234123-123123-123123..."
             Text="{Binding Path=SiteID, Mode=TwoWay}"
             />
@@ -184,77 +285,9 @@
               Margin="20"
               HorizontalOptions="Center"
             VerticalOptions="Center"
-        Command="{Binding Path=CreateSpSiteCommand}"
+        Command="{Binding Path=CreateSpSitePageCommand}"
         />
         </Grid>
-      </toolkit:Expander>
-      <Line Stroke="#CBCBCB"
-      X2="2000" />
-
-      <!-- List Pages-->
-      <toolkit:Expander Margin="10" HorizontalOptions="Center">
-        <toolkit:Expander.Header>
-          <Label FontSize="Medium" Text="🔎 List pages" HorizontalOptions="Center" Margin="0, 0, 0, 15"/>
-        </toolkit:Expander.Header>
-        <VerticalStackLayout
-          Spacing="25"
-          Padding="30,0"
-          VerticalOptions="Center">
-          <VerticalStackLayout>
-            <HorizontalStackLayout>
-              <Label Text="Site ID: " VerticalOptions="Center"></Label>
-              <Entry x:Name="entryListPagesSiteID" WidthRequest="290"
-                Placeholder="1234123-123123-123123..."
-                Text="{Binding Path=SiteID, Mode=TwoWay}"
-                />
-              <Button
-              Text="Search"
-              Margin="5, 0, 0, 0"
-              HorizontalOptions="Center"
-              VerticalOptions="Center"
-              Command="{Binding Path=GetPagesCommand}"
-              />
-            </HorizontalStackLayout>
-          </VerticalStackLayout>
-            <CollectionView
-        ItemsSource="{Binding RetrievedSitePages}"
-        ItemsLayout="VerticalList"
-        HorizontalOptions="Center"
-        Margin="0">
-              <CollectionView.ItemTemplate>
-                <DataTemplate>
-                  <Grid Padding="5"  RowSpacing="20" >
-                    <Grid.RowDefinitions>
-                      <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="auto" />
-                      <ColumnDefinition Width="auto" />
-                      <ColumnDefinition Width="auto" />
-                      <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <Button Clicked="SetPageID_Handler" Text="{Binding Id}" HeightRequest="20" Margin="20, 0, 0, 0" Grid.Column="0"/>
-                    <Border 
-                Grid.Column="1"
-                Stroke="#000000"
-                StrokeThickness="1"
-                Padding="20,8"
-                HorizontalOptions="Center">
-                      <Label Grid.Column="2" Text="{Binding Title}" />
-                    </Border>
-                    <Border 
-                Grid.Column="2"
-                Stroke="#000000"
-                StrokeThickness="1"
-                Padding="10"
-                HorizontalOptions="Center">
-                      <Label Text="{Binding Name}" />
-                    </Border>
-                  </Grid>
-                </DataTemplate>
-              </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
       </toolkit:Expander>
       <Line Stroke="#CBCBCB"
       X2="2000" />
@@ -292,7 +325,7 @@
             <Label Text="Title: " VerticalOptions="Center"></Label>
             <Entry VerticalOptions="Center" WidthRequest="300"
             Placeholder="Lorem ipsum..." HorizontalOptions="Center"
-            Text="{Binding Path=NewSiteTitle, Mode=TwoWay}"
+            Text="{Binding Path=UpdatedSiteTitle, Mode=TwoWay}"
             />
           </VerticalStackLayout>
           <Button
@@ -309,7 +342,7 @@
       <Line Stroke="#CBCBCB"
       X2="2000" />
 
-      <!-- Delete -->
+      <!-- DELETE -->
       <toolkit:Expander Margin="10" HorizontalOptions="Center">
         <toolkit:Expander.Header>
           <Label FontSize="Medium" Text="❌ Delete page" HorizontalOptions="Center"/>
@@ -350,6 +383,7 @@
             />
         </Grid>
       </toolkit:Expander>
+      <Label Text="Hacked together by: Tarzzi @ Github" FontSize="Caption"/>
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>
