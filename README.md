@@ -12,12 +12,12 @@ A simple SharePoint page toolkit with .NET MAUI and Graph API, that allows an ad
 - Sites.ReadWrite.All
 
 2.Add your Tenant ID and app registration's client ID to GraphService.cs file
-![](IMG/clinfo.png)
+![](IMG/clientinfo.png)
 
 ## What can I do with it?
 - Get name of the logged in user
-- Search sites
-- List pages on a site
+- Search SharePoint sites
+- List pages on a selected site
 - Create a page
 - Update a page
 - Delete a page
