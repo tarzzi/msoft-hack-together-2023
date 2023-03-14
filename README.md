@@ -1,10 +1,9 @@
 # SharePoint page toolkit
 [![Hack Together: Microsoft Graph and .NET](https://img.shields.io/badge/Microsoft%20-Hack--Together-orange?style=for-the-badge&logo=microsoft)](https://github.com/microsoft/hack-together)  
-[Microsoft Hack Together 2023: Microsoft Graph and .NET](https://github.com/microsoft/hack-together) 🦒  
 
 ## What is this?
 This is my submission as part of the hackathon!  
-A simple SharePoint page toolkit with .NET MAUI and Graph API, that allows an admin to leverage Graph API for quick basic SharePoint page CRUD operations. 
+A simple SharePoint page toolkit with .NET MAUI and Graph API  🦒, that allows an admin to leverage Graph API for quick basic SharePoint page CRUD operations. 
 
 ## Supported platforms
 Currently tested/working only on Windows platform, due to limited time and resources
