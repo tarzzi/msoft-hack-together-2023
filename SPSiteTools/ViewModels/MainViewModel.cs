@@ -171,6 +171,8 @@ namespace SPPageTools.ViewModels
         {
           var siteId = site.Id.Split(',')[1];
           site.Id = siteId;
+          var webUrl = site.WebUrl.Split("sharepoint.com")[1];
+          site.WebUrl = webUrl;
         }
 
         RetrievedSites = SitesResponse.Value;
